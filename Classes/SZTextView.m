@@ -112,8 +112,6 @@ static NSString * const kTextAlignmentKey = @"textAlignment";
               options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:kFontKey
               options:NSKeyValueObservingOptionNew context:nil];
-    [self addObserver:self forKeyPath:kAttributedTextKey
-              options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:kTextKey
               options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:kTextAlignmentKey
@@ -130,6 +128,11 @@ static NSString * const kTextAlignmentKey = @"textAlignment";
         [self addObserver:self forKeyPath:kTextContainerInsetKey
                   options:NSKeyValueObservingOptionNew context:nil];
     }
+}
+
+- (void)setAttributedText:(NSAttributedString *)attributedText {
+    super.attributedText = attributedText;
+    [self setPlaceholderVisibleForText:attributedText.string];
 }
 
 - (void)setPlaceholder:(NSString *)placeholderText
@@ -172,10 +175,6 @@ static NSString * const kTextAlignmentKey = @"textAlignment";
     }
     else if ([keyPath isEqualToString:kFontKey]) {
         self._placeholderTextView.font = [change valueForKey:NSKeyValueChangeNewKey];
-    }
-    else if ([keyPath isEqualToString:kAttributedTextKey]) {
-        NSAttributedString *newAttributedText = [change valueForKey:NSKeyValueChangeNewKey];
-        [self setPlaceholderVisibleForText:newAttributedText.string];
     }
     else if ([keyPath isEqualToString:kTextKey]) {
         NSString *newText = [change valueForKey:NSKeyValueChangeNewKey];
